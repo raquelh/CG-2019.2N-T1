@@ -97,9 +97,50 @@ scene.add(cube);
 
 
 
+//audio
+var audioListener = new THREE.AudioListener();
+
+// add the listener to the camera
+camera.add( audioListener );
+
+// instantiate audio object
+var oceanAmbientSound = new THREE.Audio( audioListener );
+
+// add the audio object to the scene
+scene.add( oceanAmbientSound );
+
+// instantiate a loader
+var loader = new THREE.AudioLoader();
+
+// load a resource
+loader.load(
+	// resource URL
+	'./modelos/sambinha.ogg',
+
+	// onLoad callback
+	function ( audioBuffer ) {
+		// set the audio object buffer to the loaded object
+		oceanAmbientSound.setBuffer( audioBuffer );
+
+		// play the audio
+		oceanAmbientSound.play();
+	},
+
+	// onProgress callback
+	function ( xhr ) {
+		console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
+	},
+
+	// onError callback
+	function ( err ) {
+		console.log( 'An error happened' );
+	}
+);
+
+
 //boneco
 var pula = new FBXLoader();
-pula.load( '../modelos/Samba Dancing.fbx', function ( object ) {
+pula.load( './modelos/Reaction.fbx', function ( object ) {
     mixer = new THREE.AnimationMixer( object );
     var action = mixer.clipAction( object.animations[ 0 ] );
     action.play();
@@ -108,10 +149,10 @@ pula.load( '../modelos/Samba Dancing.fbx', function ( object ) {
             child.castShadow = true;
             child.receiveShadow = true;
         }
-    } );
+    }
+    );
     scene.add( object );
 } );
-
 
 
 renderer = new THREE.WebGLRenderer( { antialias: true } );

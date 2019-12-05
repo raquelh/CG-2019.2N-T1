@@ -4,27 +4,27 @@
 import * as THREE from './libs/threejs/build/three.module.js';
 
 var scene, camera, renderer, analyser, uniforms;
-var startButton = document.getElementById( 'startButton' );
-startButton.addEventListener( 'click', init );
+//var startButton = document.getElementById( 'startButton' );
+//startButton.addEventListener( 'click', init );
 init()
 function init() {
     var fftSize = 128;
-    //
-    var overlay = document.getElementById( 'overlay' );
-    overlay.remove();
-    //
+    //var overlay = document.getElementById( 'overlay' );
+    //overlay.remove();
     var container = document.getElementById( 'container' );
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setSize( window.innerWidth, window.innerHeight );
     renderer.setClearColor( 0x000000 );
     renderer.setPixelRatio( window.devicePixelRatio );
-    container.appendChild( renderer.domElement );
+    //container.appendChild( renderer.domElement );
     scene = new THREE.Scene();
     camera = new THREE.Camera();
     //
+
+
     var listener = new THREE.AudioListener();
     var audio = new THREE.Audio( listener );
-    var mediaElement = new Audio( './samba.mp3' );
+    var mediaElement = new Audio( '../modelos/samba.mp3' );
     mediaElement.loop = true;
     mediaElement.play();
     audio.setMediaElementSource( mediaElement );
