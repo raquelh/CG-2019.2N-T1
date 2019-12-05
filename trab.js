@@ -38,63 +38,6 @@ var grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
 grid.material.opacity = 0.2;
 grid.material.transparent = true;
 scene.add( grid );
-// model
-/*var anda = new FBXLoader();
-anda.load( '../modelos/Walking.fbx', function ( object ) {
-    mixer = new THREE.AnimationMixer( object );
-    var action = mixer.clipAction( object.animations[ 0 ] );
-    action.play();
-    object.traverse( function ( child ) {
-        if ( child.isMesh ) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-        }
-    } );
-    scene.add( object );
-} );*/
-
-//textura
-// instantiate a loader
-var loader = new THREE.TextureLoader();
-
-// load a resource
-loader.load(
-	// resource URL
-	'./fernando.png',
-
-	// onLoad callback
-	function ( texture ) {
-		// in this example we create the material when the texture is loaded
-		var material = new THREE.MeshBasicMaterial( {
-			map: texture
-		 } );
-	},
-
-	// onProgress callback currently not supported
-	undefined,
-
-	// onError callback
-	function ( err ) {
-		console.error( 'An error happened.' );
-	}
-);
-// cubo
-
-var loader = new THREE.CubeTextureLoader();
-loader.setPath( 'textures/cube/pisa/' );
-
-var textureCube = loader.load( [
-	'fernado.png',
-	'fernando.png',
-	'fernando.png'
-] );
-
-var material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: textureCube } );
-var geometry = new THREE.BoxGeometry(1, 1, 1);
-var material = new THREE.MeshBasicMaterial({color: 0xff0000});
-var cube = new THREE.Mesh(geometry, material);
-scene.add(cube);
-
 
 
 //audio
@@ -140,7 +83,7 @@ loader.load(
 
 //boneco
 var pula = new FBXLoader();
-pula.load( './modelos/Reaction.fbx', function ( object ) {
+pula.load( './modelos/Samba Dancing.fbx', function ( object ) {
     mixer = new THREE.AnimationMixer( object );
     var action = mixer.clipAction( object.animations[ 0 ] );
     action.play();
@@ -176,6 +119,7 @@ function onWindowResize() {
 //
 function animate() {
     requestAnimationFrame( animate );
+    //action.play();
     var delta = clock.getDelta();
     if ( mixer ) mixer.update( delta );
     renderer.render( scene, camera );
