@@ -28,7 +28,7 @@ light.shadow.camera.bottom = - 100;
 light.shadow.camera.left = - 120;
 light.shadow.camera.right = 120;
 scene.add( light );
-// scene.add( new CameraHelper( light.shadow.camera ) );
+//scene.add( new CameraHelper( light.shadow.camera ) );
 // ground chão
 var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999900, depthWrite: false } ) );
 mesh.rotation.x = - Math.PI / 2;
@@ -99,7 +99,7 @@ scene.add(cube);
 
 //boneco
 var pula = new FBXLoader();
-pula.load( '../modelos/Jumping.fbx', function ( object ) {
+pula.load( '../modelos/Samba Dancing.fbx', function ( object ) {
     mixer = new THREE.AnimationMixer( object );
     var action = mixer.clipAction( object.animations[ 0 ] );
     action.play();
