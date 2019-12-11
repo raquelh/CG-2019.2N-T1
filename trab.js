@@ -15,8 +15,8 @@ document.body.appendChild( container );
 camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
 camera.position.set( 100, 200, 300 );
 scene = new THREE.Scene();
-scene.background = new THREE.Color( 0xa0a0a0 );
-scene.fog = new THREE.Fog( 0xa0a0a0, 200, 1000 );
+scene.background = new THREE.Color(0xb3ecff);
+//scene.fog = new THREE.Fog( 0xff0000, 200, 1000 );
 light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
 light.position.set( 0, 200, 0 );
 scene.add( light );
@@ -30,14 +30,14 @@ light.shadow.camera.right = 120;
 scene.add( light );
 //scene.add( new CameraHelper( light.shadow.camera ) );
 // ground chão
-var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x999900, depthWrite: false } ) );
+var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x009900, depthWrite: false } ) );
 mesh.rotation.x = - Math.PI / 2;
 mesh.receiveShadow = true;
 scene.add( mesh );
-var grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
-grid.material.opacity = 0.2;
-grid.material.transparent = true;
-scene.add( grid );
+//var grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
+//grid.material.opacity = 0.2;
+//grid.material.transparent = true;
+//scene.add( grid );
 
 
 //audio
@@ -96,6 +96,57 @@ pula.load( './modelos/Samba Dancing.fbx', function ( object ) {
     );
     scene.add( object );
 } );
+
+//tree
+var tree = new FBXLoader();
+tree.load('./modelos/Christmas_Tree.fbx', function( object){
+    object.traverse( function ( child ) {
+        if ( child.isMesh ) {
+            child.material = new THREE.MeshLambertMaterial( {  
+                color: 0xff0000
+             } );
+     
+         }
+        }
+    )
+    object.translateX(-200);
+    object.translateZ(-15);
+    scene.add( object );
+});
+//cubo fernando
+var texture = new THREE.TextureLoader().load( './modelos/fernando.png' );
+var material = new THREE.MeshBasicMaterial( { map: texture } );
+var geometry = new THREE.CubeGeometry( 15, 15, 15, 15 );
+var fernando = new THREE.Mesh( geometry, material );
+fernando.translateX(-200);
+fernando.translateY(200);
+scene.add( fernando );
+
+//cubo emilio
+var texture = new THREE.TextureLoader().load( './modelos/emilio.JPG' );
+var material = new THREE.MeshBasicMaterial( { map: texture } );
+var geometry = new THREE.CubeGeometry( 30, 30, 30, 30 );
+var emilio = new THREE.Mesh( geometry, material );
+emilio.translateX(-200);
+scene.add( emilio );
+
+//cubo guilherme
+var texture = new THREE.TextureLoader().load( './modelos/guilherme.JPG' );
+var material = new THREE.MeshBasicMaterial( { map: texture } );
+var geometry = new THREE.CubeGeometry( 25, 25, 25, 25 );
+var guilherme = new THREE.Mesh( geometry, material );
+guilherme.translateX(-210);
+guilherme.translateZ(30);
+scene.add( guilherme );
+
+//cubo andrew 
+var texture = new THREE.TextureLoader().load( './modelos/andrew.JPG' );
+var material = new THREE.MeshBasicMaterial( { map: texture } );
+var geometry = new THREE.CubeGeometry( 25, 25, 25, 25 );
+var andrew = new THREE.Mesh( geometry, material );
+andrew.translateX(-170);
+//andrew.translateZ(30);
+scene.add( andrew);
 
 
 renderer = new THREE.WebGLRenderer( { antialias: true } );
