@@ -7,172 +7,226 @@ var container, stats, controls;
 var camera, scene, renderer, light;
 var clock = new THREE.Clock();
 var mixer;
+var listener = new THREE.AudioListener();
+
+var sound = new THREE.Audio( listener );
+
+
 init();
 animate();
 function init() {
-container = document.createElement( 'div' );
-document.body.appendChild( container );
-camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
-camera.position.set( 100, 200, 300 );
-scene = new THREE.Scene();
-scene.background = new THREE.Color(0xb3ecff);
-//scene.fog = new THREE.Fog( 0xff0000, 200, 1000 );
-light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
-light.position.set( 0, 200, 0 );
-scene.add( light );
-light = new THREE.DirectionalLight( 0xffffff );
-light.position.set( 0, 200, 100 );
-light.castShadow = true;
-light.shadow.camera.top = 180;
-light.shadow.camera.bottom = - 100;
-light.shadow.camera.left = - 120;
-light.shadow.camera.right = 120;
-scene.add( light );
-//scene.add( new CameraHelper( light.shadow.camera ) );
-// ground chão
-var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x009900, depthWrite: false } ) );
-mesh.rotation.x = - Math.PI / 2;
-mesh.receiveShadow = true;
-scene.add( mesh );
-//var grid = new THREE.GridHelper( 2000, 20, 0x000000, 0x000000 );
-//grid.material.opacity = 0.2;
-//grid.material.transparent = true;
-//scene.add( grid );
+    container = document.createElement( 'div' );
+    document.body.appendChild( container );
+    camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 );
+    camera.position.set( 100, 200, 300 );
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xb3ecff);
+    //scene.fog = new THREE.Fog( 0xff0000, 200, 1000 );
+    light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+    light.position.set( 0, 200, 0 );
+    scene.add( light );
+    light = new THREE.DirectionalLight( 0xffffff );
+    light.position.set( 0, 200, 100 );
+    light.castShadow = true;
+    light.shadow.camera.top = 180;
+    light.shadow.camera.bottom = - 100;
+    light.shadow.camera.left = - 120;
+    light.shadow.camera.right = 120;
+    scene.add( light );
+    //scene.add( new CameraHelper( light.shadow.camera ) );
+    // ground chão
+    var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x009900, depthWrite: false } ) );
+    mesh.rotation.x = - Math.PI / 2;
+    mesh.receiveShadow = true;
+    scene.add( mesh );
 
-
-//audio
-var audioListener = new THREE.AudioListener();
-
-// add the listener to the camera
-camera.add( audioListener );
-
-// instantiate audio object
-var oceanAmbientSound = new THREE.Audio( audioListener );
-
-// add the audio object to the scene
-scene.add( oceanAmbientSound );
-
-// instantiate a loader
-var loader = new THREE.AudioLoader();
-
-// load a resource
-loader.load(
-	// resource URL
-	'./modelos/sambinha.ogg',
-
-	// onLoad callback
-	function ( audioBuffer ) {
-		// set the audio object buffer to the loaded object
-		oceanAmbientSound.setBuffer( audioBuffer );
-
-		// play the audio
-		oceanAmbientSound.play();
-	},
-
-	// onProgress callback
-	function ( xhr ) {
-		console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );
-	},
-
-	// onError callback
-	function ( err ) {
-		console.log( 'An error happened' );
-	}
-);
-
-
-//boneco
-var pula = new FBXLoader();
-pula.load( './modelos/Samba Dancing.fbx', function ( object ) {
-    mixer = new THREE.AnimationMixer( object );
-    var action = mixer.clipAction( object.animations[ 0 ] );
-    action.play();
-    object.traverse( function ( child ) {
-        if ( child.isMesh ) {
-            child.castShadow = true;
-            child.receiveShadow = true;
+    //boneco
+    var pula = new FBXLoader();
+    pula.load( './modelos/Samba Dancing.fbx', function ( object ) {
+        mixer = new THREE.AnimationMixer( object );
+        var action = mixer.clipAction( object.animations[ 0 ] );
+        action.play();
+        object.traverse( function ( child ) {
+            if ( child.isMesh ) {
+                child.castShadow = true;
+                child.receiveShadow = true;
+            }
         }
-    }
-    );
-    scene.add( object );
-} );
+        );
+        scene.add( object );
+    } );
 
-//tree
-var tree = new FBXLoader();
-tree.load('./modelos/Christmas_Tree.fbx', function( object){
-    object.traverse( function ( child ) {
-        if ( child.isMesh ) {
-            child.material = new THREE.MeshLambertMaterial( {  
-                color: 0xff0000
-             } );
-     
-         }
-        }
-    )
-    object.translateX(-200);
-    object.translateZ(-15);
-    scene.add( object );
-});
-//cubo fernando
-var texture = new THREE.TextureLoader().load( './modelos/fernando.png' );
-var material = new THREE.MeshBasicMaterial( { map: texture } );
-var geometry = new THREE.CubeGeometry( 15, 15, 15, 15 );
-var fernando = new THREE.Mesh( geometry, material );
-fernando.translateX(-200);
-fernando.translateY(200);
-scene.add( fernando );
+    //treeRed
+    var tree = new FBXLoader();
+    tree.load('./modelos/Christmas_Tree.fbx', function( object){
+        object.traverse( function ( child ) {
+            if ( child.isMesh ) {
+                child.material = new THREE.MeshLambertMaterial( {  
+                    color: 0xff0000
+                } );
+            }
+            }
+        )
+        object.translateX(-200);
+        //object.translateZ(-15);
+        scene.add( object );
+    });
+    //treeBlue
+    /*var tree2 = new FBXLoader();
+    tree2.load('./modelos/Christmas_Tree.fbx', function( object){
+        object.traverse( function ( child ) {
+            if ( child.isMesh ) {
+                child.material = new THREE.MeshLambertMaterial( {  
+                    color: 0x0000ff
+                } );
+            }
+            }
+        )
+        object.translateX(220);
+        //object.translateZ(-15);
+        scene.add( object );
+    });*/
+    //cubo fernando
+    var texture = new THREE.TextureLoader().load( './modelos/fernando.png' );
+    var material = new THREE.MeshBasicMaterial( { map: texture } );
+    var geometry = new THREE.CubeGeometry( 15, 15, 15, 15 );
+    var fernando = new THREE.Mesh( geometry, material );
+    fernando.translateX(-200);
+    fernando.translateY(200);
+    scene.add( fernando );
 
-//cubo emilio
-var texture = new THREE.TextureLoader().load( './modelos/emilio.JPG' );
-var material = new THREE.MeshBasicMaterial( { map: texture } );
-var geometry = new THREE.CubeGeometry( 30, 30, 30, 30 );
-var emilio = new THREE.Mesh( geometry, material );
-emilio.translateX(-200);
-scene.add( emilio );
+    //cubo emilio
+    var texture = new THREE.TextureLoader().load( './modelos/emilio.JPG' );
+    var material = new THREE.MeshBasicMaterial( { map: texture } );
+    var geometry = new THREE.CubeGeometry( 30, 30, 30, 30 );
+    var emilio = new THREE.Mesh( geometry, material );
+    //emilio.rotationX()
+    emilio.translateZ(15);
+    emilio.translateX(-200);
+    scene.add( emilio );
 
-//cubo guilherme
-var texture = new THREE.TextureLoader().load( './modelos/guilherme.JPG' );
-var material = new THREE.MeshBasicMaterial( { map: texture } );
-var geometry = new THREE.CubeGeometry( 25, 25, 25, 25 );
-var guilherme = new THREE.Mesh( geometry, material );
-guilherme.translateX(-210);
-guilherme.translateZ(30);
-scene.add( guilherme );
+    //cubo guilherme
+    var texture = new THREE.TextureLoader().load( './modelos/guilherme.JPG' );
+    var material = new THREE.MeshBasicMaterial( { map: texture } );
+    var geometry = new THREE.CubeGeometry( 25, 25, 25, 25 );
+    var guilherme = new THREE.Mesh( geometry, material );
+    guilherme.translateX(-230);
+    //guilherme.translateZ(30);
+    scene.add( guilherme );
 
-//cubo andrew 
-var texture = new THREE.TextureLoader().load( './modelos/andrew.JPG' );
-var material = new THREE.MeshBasicMaterial( { map: texture } );
-var geometry = new THREE.CubeGeometry( 25, 25, 25, 25 );
-var andrew = new THREE.Mesh( geometry, material );
-andrew.translateX(-170);
-//andrew.translateZ(30);
-scene.add( andrew);
+    //cubo andrew 
+    var texture = new THREE.TextureLoader().load( './modelos/andrew.JPG' );
+    var material = new THREE.MeshBasicMaterial( { map: texture } );
+    var geometry = new THREE.CubeGeometry( 25, 25, 25, 25 );
+    var andrew = new THREE.Mesh( geometry, material );
+    andrew.translateX(-180);
+    andrew.translateZ(-20);
+    //andrew.translateZ(30);
+    scene.add( andrew);
+
+    
 
 
-renderer = new THREE.WebGLRenderer( { antialias: true } );
-renderer.setPixelRatio( window.devicePixelRatio );
-renderer.setSize( window.innerWidth, window.innerHeight );
-renderer.shadowMap.enabled = true;
-container.appendChild( renderer.domElement );
-controls = new OrbitControls( camera, renderer.domElement );
-controls.target.set( 0, 100, 0 );
-controls.update();
-window.addEventListener( 'resize', onWindowResize, false );
-// stats
-stats = new Stats();
-container.appendChild( stats.dom );
+    renderer = new THREE.WebGLRenderer( { antialias: true } );
+    renderer.setPixelRatio( window.devicePixelRatio );
+    renderer.setSize( window.innerWidth, window.innerHeight );
+    renderer.shadowMap.enabled = true;
+    container.appendChild( renderer.domElement );
+    controls = new OrbitControls( camera, renderer.domElement );
+    controls.target.set( 0, 100, 0 );
+    controls.update();
+    window.addEventListener( 'resize', onWindowResize, false );
+    // stats
+    stats = new Stats();
+    container.appendChild( stats.dom );
 }
 function onWindowResize() {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize( window.innerWidth, window.innerHeight );
 }
+function audioS(keyCode){
+    /*var listener = new THREE.AudioListener();
+    camera.add( listener );
+
+    // create a global audio source
+    var sound = new THREE.Audio( listener );*/
+
+    // load a sound and set it as the Audio object's buffer
+    camera.add( listener );
+
+    // create a global audio source
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( './modelos/sambinha.ogg', function( buffer ) {
+        sound.setBuffer( buffer );
+        //sound.setLoop(true);
+        sound.setVolume(0.5);
+        if (keyCode == 97){
+            //console.log(sound.play())
+            sound.play();
+        }
+    });
+    if (keyCode == 98){
+        camera.remove( listener)
+    }
+
+}
+
+function audioF(keyCode){
+    var listener = new THREE.AudioListener();
+    camera.add( listener );
+
+    // create a global audio source
+    //var sound = new THREE.Audio( listener );
+
+    // load a sound and set it as the Audio object's buffer
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( './modelos/funkNatal.ogg', function( buffer ) {
+        sound.setBuffer( buffer );
+        //sound.setLoop(true);
+        sound.setVolume(0.5);
+        /*if (keyCode == 99){
+            //console.log(sound.play())
+            sound.play();
+        }if (keyCode == 98){
+            console.log('maria');
+            sound.setVolume(0.0);
+            sound.pause ();
+            sound.stop();
+        }*/
+    });
+    
+
+}
+
+
+function onKeyDown(event) {
+    var keyCode = event.which;
+    var speed = 0.1;
+
+    console.log('keyCode', keyCode);
+
+    if (keyCode == 97) {
+        audioS(keyCode);
+        sound.play();
+    } 
+
+   if (keyCode == 98) {
+       console.log('jesus');
+        audioS(keyCode);
+    }
+    else if (keyCode == 99){
+        audioF(keyCode)
+    }
+
+};
 //
 function animate() {
     requestAnimationFrame( animate );
     //action.play();
     var delta = clock.getDelta();
     if ( mixer ) mixer.update( delta );
+    document.addEventListener("keydown", onKeyDown, false);
     renderer.render( scene, camera );
     stats.update();
 }
