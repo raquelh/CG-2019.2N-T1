@@ -8,8 +8,8 @@ var camera, scene, renderer, light;
 var clock = new THREE.Clock();
 var mixer;
 var listener = new THREE.AudioListener();
-
-var sound = new THREE.Audio( listener );
+var pagode = new THREE.Audio( listener );
+var funkN = new THREE.Audio( listener );
 
 
 init();
@@ -33,7 +33,6 @@ function init() {
     light.shadow.camera.left = - 120;
     light.shadow.camera.right = 120;
     scene.add( light );
-    //scene.add( new CameraHelper( light.shadow.camera ) );
     // ground chão
     var mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 2000, 2000 ), new THREE.MeshPhongMaterial( { color: 0x009900, depthWrite: false } ) );
     mesh.rotation.x = - Math.PI / 2;
@@ -50,6 +49,7 @@ function init() {
             if ( child.isMesh ) {
                 child.castShadow = true;
                 child.receiveShadow = true;
+
             }
         }
         );
@@ -71,21 +71,7 @@ function init() {
         //object.translateZ(-15);
         scene.add( object );
     });
-    //treeBlue
-    /*var tree2 = new FBXLoader();
-    tree2.load('./modelos/Christmas_Tree.fbx', function( object){
-        object.traverse( function ( child ) {
-            if ( child.isMesh ) {
-                child.material = new THREE.MeshLambertMaterial( {  
-                    color: 0x0000ff
-                } );
-            }
-            }
-        )
-        object.translateX(220);
-        //object.translateZ(-15);
-        scene.add( object );
-    });*/
+
     //cubo fernando
     var texture = new THREE.TextureLoader().load( './modelos/fernando.png' );
     var material = new THREE.MeshBasicMaterial( { map: texture } );
@@ -124,9 +110,22 @@ function init() {
     //andrew.translateZ(30);
     scene.add( andrew);
 
-    
 
+    //audio pagode
 
+    camera.add( listener );
+
+    // create a global audio source
+    var audioLoader = new THREE.AudioLoader();
+    audioLoader.load( './modelos/sambinha.ogg', function( buffer ) {
+        pagode.setBuffer( buffer );
+        pagode.setVolume(0.5);
+    });
+    //funk natalino
+    audioLoader.load( './modelos/funkNatal.ogg', function( buffer ) {
+        funkN.setBuffer( buffer );
+        funkN.setVolume(0.5);
+    });
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
     renderer.setSize( window.innerWidth, window.innerHeight );
@@ -146,11 +145,11 @@ function onWindowResize() {
     renderer.setSize( window.innerWidth, window.innerHeight );
 }
 function audioS(keyCode){
-    /*var listener = new THREE.AudioListener();
+    var listener = new THREE.AudioListener();
     camera.add( listener );
 
     // create a global audio source
-    var sound = new THREE.Audio( listener );*/
+    var pagode = new THREE.Audio( listener );
 
     // load a sound and set it as the Audio object's buffer
     camera.add( listener );
@@ -158,44 +157,17 @@ function audioS(keyCode){
     // create a global audio source
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load( './modelos/sambinha.ogg', function( buffer ) {
-        sound.setBuffer( buffer );
+        pagode.setBuffer( buffer );
         //sound.setLoop(true);
-        sound.setVolume(0.5);
-        if (keyCode == 97){
+        pagode.setVolume(0.5);
+        if (keyCode == 49){
             //console.log(sound.play())
-            sound.play();
+            pagode.play();
         }
     });
     if (keyCode == 98){
         camera.remove( listener)
     }
-
-}
-
-function audioF(keyCode){
-    var listener = new THREE.AudioListener();
-    camera.add( listener );
-
-    // create a global audio source
-    //var sound = new THREE.Audio( listener );
-
-    // load a sound and set it as the Audio object's buffer
-    var audioLoader = new THREE.AudioLoader();
-    audioLoader.load( './modelos/funkNatal.ogg', function( buffer ) {
-        sound.setBuffer( buffer );
-        //sound.setLoop(true);
-        sound.setVolume(0.5);
-        /*if (keyCode == 99){
-            //console.log(sound.play())
-            sound.play();
-        }if (keyCode == 98){
-            console.log('maria');
-            sound.setVolume(0.0);
-            sound.pause ();
-            sound.stop();
-        }*/
-    });
-    
 
 }
 
@@ -206,17 +178,19 @@ function onKeyDown(event) {
 
     console.log('keyCode', keyCode);
 
-    if (keyCode == 97) {
-        audioS(keyCode);
-        sound.play();
+    if (keyCode == 49) {
+        funkN.pause();
+        pagode.play();
     } 
 
-   if (keyCode == 98) {
-       console.log('jesus');
-        audioS(keyCode);
+   if (keyCode == 50) {
+        pagode.pause();
+        funkN.play();
     }
-    else if (keyCode == 99){
-        audioF(keyCode)
+    if (keyCode == 51){
+        pagode.pause();
+        funkN.pause();
+        
     }
 
 };
