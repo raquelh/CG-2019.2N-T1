@@ -119,12 +119,12 @@ function init() {
     var audioLoader = new THREE.AudioLoader();
     audioLoader.load( './modelos/sambinha.ogg', function( buffer ) {
         pagode.setBuffer( buffer );
-        pagode.setVolume(0.5);
+        pagode.setVolume(1);
     });
     //funk natalino
     audioLoader.load( './modelos/funkNatal.ogg', function( buffer ) {
         funkN.setBuffer( buffer );
-        funkN.setVolume(0.5);
+        funkN.setVolume(1);
     });
     renderer = new THREE.WebGLRenderer( { antialias: true } );
     renderer.setPixelRatio( window.devicePixelRatio );
