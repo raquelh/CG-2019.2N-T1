@@ -11,7 +11,7 @@ var listener = new THREE.AudioListener();
 var pagode = new THREE.Audio( listener );
 var funkN = new THREE.Audio( listener );
 
-
+var context = new AudioContext();
 init();
 animate();
 function init() {
