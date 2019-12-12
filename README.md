@@ -2,6 +2,7 @@
 Computação Grafica
 
 Nome: Raquel Hengen Ribeiro
+
 Matricula :161110058
 
 <b>Projeto</b>
@@ -19,5 +20,7 @@ Projeto baseado em: https://github.com/mrdoob/three.js/blob/master/examples/webg
 <b> Iteração com o teclado</b>
 
 1- toca deixa acontecer naturalmente
+
 2 - Toca remix de natal
+
 3 - Pausa as músicas
